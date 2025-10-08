@@ -1,27 +1,10 @@
-from ast import Pass
 from django.contrib import admin
 
 from faunatrack.models import Espece, Location, Observation, ObservationPhotos, Project, Scientifique
 
-# from faunatrack.models import Espece
-
-
-# # @admin.register(Espece)
-# class EspeceAdmin(admin.ModelAdmin):
-#     list_display = ["nom", "nom_sic"]
-#     list_filter = ["nom_sic"]
-#     search_fields = ["nom", "nom_sic"]
-#     ordering = ["-nom_sic"]
-#     list_editable = ["nom_sic"]
-    
-# admin.site.register(Espece, EspeceAdmin) 
-
 class ObservationPhotosInline(admin.TabularInline):
     model = ObservationPhotos
     extra = 1
-    
-    
-
 class EspeceAdmin(admin.ModelAdmin):
     pass
 class LocationAdmin(admin.ModelAdmin):
