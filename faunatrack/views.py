@@ -1,9 +1,12 @@
 from django.http import HttpRequest
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.utils import timezone
 
+from faunatrack.forms import ObservationForm
 from faunatrack.models import Espece, Observation, ObservationPhotos, Scientifique
 from django.db.models import OuterRef, Subquery
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 # Create your views here.
 def home(request: HttpRequest):
@@ -49,7 +52,6 @@ def home(request: HttpRequest):
     photos = ObservationPhotos.objects.all()[:3]
 
 
-    
     return render(request, "home.html", context={
         "title": "Faunatrack October 2025",
         "last_extincts": obs_extincts,  # QS are lazy evaluated so the actual db call is done only when needed
@@ -59,3 +61,17 @@ def home(request: HttpRequest):
         
     })
     
+    
+
+
+class ObservationList(ListView):
+    model = Observation
+    queryset = Observation.objects.filter(espece__nom="Loup")
+    template_name = "observations/list.html"   
+    
+    
+class ObservationCreate(CreateView):
+    model = Observation
+    template_name= "observations/create.html"
+    form_class = ObservationForm
+    success_url = reverse_lazy("observation_list")

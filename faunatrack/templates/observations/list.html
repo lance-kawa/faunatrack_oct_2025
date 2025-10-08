@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<a href="{% url 'observation_create' %}" class="text-green-500">Ajouter une observation</a>
+{% for obs in object_list %}
+    <p> {{ obs }}</p>
+{% endfor %}
+
+{% endblock content %}

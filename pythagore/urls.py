@@ -19,11 +19,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 
-from faunatrack.views import home
+from faunatrack.views import ObservationCreate, ObservationList, home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name="home"),
+    path('obs/', ObservationList.as_view(), name="observation_list"),
+    path('obs/add/', ObservationCreate.as_view(), name="observation_create"),
     # path('auth/', include('django.contrib.auth.urls'))
 ]  
 
