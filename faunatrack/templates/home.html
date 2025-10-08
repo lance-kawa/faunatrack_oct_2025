@@ -1,9 +1,26 @@
 {% extends "base.html" %}
-
+{% load static %}
 
 {% block content %}
 
     {% include "bonjour.html" %}
-    Bienvenue {{ username }}
+    <h1>Especes éteinte</h1>
+    {% for obs in last_extincts %}
+        <p>{{ obs.quantite }} {{ obs.espece.nom}} observé le {{ obs.date_observation }}  </p>
+    {% endfor %}
+
+    {% for photo in photos %}
+        <img src="{% static photo.photo.url %}" alt="photos">
+
+    {% endfor %}
+
+    {% for scientist in scientifiques %}
+        <p>{{ scientist.user.username}}</p>
+    {% endfor %}
+    
+
+    {% for obs in obs_test %}
+    {{ obs}}
+    {% endfor %}
 
 {% endblock content %}

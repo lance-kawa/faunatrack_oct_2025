@@ -7,6 +7,12 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+
+# La quantité et la dernière localisation des especes extinct
+# Tout les scientifiques des projets public qui concernent une espece
+# Afficher les 3 dernières photos prises
+
+
 class BaseModel(models.Model):
     id = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -14,7 +20,8 @@ class BaseModel(models.Model):
     
     class Meta:
         abstract = True
-    
+
+
 
 class Espece(models.Model):
     
@@ -32,7 +39,7 @@ class Espece(models.Model):
         DEFAULT = ("default", _("default"))
    
         
-    nom = models.CharField(max_length=255, default="espece inconnu")
+    nom = models.CharField(max_length=255, default="espece inconnu", unique=True)
     status = models.CharField(max_length=255, default=StatusChoices.DEFAULT, choices=StatusChoices.choices)
     
     def __str__(self):
@@ -46,7 +53,19 @@ class Location(models.Model):
     def __str__(self):
         return f"Long: {self.long} Lat: {self.latitude}"
 
+
+class ObservationeManager(models.Manager):
+    
+    def get_complex_query():
+        pass
+    
+    
+        
+        
 class Observation(models.Model):
+    objects = ObservationeManager()
+    
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     date_observation = models.DateTimeField()
@@ -54,7 +73,7 @@ class Observation(models.Model):
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     quantite = models.IntegerField(default=0)
     notes = models.TextField()
-    project = models.ForeignKey("faunatrack.Project", on_delete=models.SET_NULL, null=True)
+    project = models.ForeignKey("faunatrack.Project", on_delete=models.SET_NULL, null=True, related_name="observations")
     
     def __str__(self):
         return f" {self.quantite} {self.espece.nom} at {self.location} on {self.date_observation}"
@@ -89,13 +108,22 @@ class Project(BaseModel):
         super().save(*args, **kwargs)
         
     
+class ProjectsMembers(BaseModel):
+    
+    class RoleChoices(models.TextChoices):
+        ADMIN = ("admin", "administrateur")
+        MEMBER = ("member", "member")
+        
+    scientifique = models.ForeignKey("faunatrack.Scientifique", on_delete=models.CASCADE, related_name="project_member")  
+    projet = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="project_member")    
+    roles = models.CharField(max_length=255, choices=RoleChoices.choices, default=RoleChoices.MEMBER)
+    
 class Scientifique(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profil")
-    roles = models.CharField(max_length=255, null=True)
+    projets = models.ManyToManyField(Project, through=ProjectsMembers)
     
     def __str__(self):
         return self.user.username
-    
     
     
     
