@@ -24,6 +24,7 @@ class BaseModel(models.Model):
 
 
 class Espece(models.Model):
+
     
     class Meta:
         verbose_name_plural = _("Espèces")
@@ -72,7 +73,7 @@ class Observation(models.Model):
     espece = models.ForeignKey(Espece, on_delete=models.PROTECT, related_name="observations")
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     quantite = models.IntegerField(default=0)
-    notes = models.TextField()
+    notes = models.TextField(null=True, blank=True)
     project = models.ForeignKey("faunatrack.Project", on_delete=models.SET_NULL, null=True, related_name="observations")
     
     def __str__(self):

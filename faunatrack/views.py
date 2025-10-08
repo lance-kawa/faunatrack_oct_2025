@@ -74,4 +74,4 @@ class ObservationCreate(CreateView):
     model = Observation
     template_name= "observations/create.html"
     form_class = ObservationForm
-    success_url = reverse_lazy("observation_list")
+    success_url = reverse_lazy("home")

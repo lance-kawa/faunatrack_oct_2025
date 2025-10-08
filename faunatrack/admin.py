@@ -14,13 +14,14 @@ class ObservationPhotosInline(admin.TabularInline):
     extra = 1
 
 class EspeceAdmin(admin.ModelAdmin):
-    list_display = ["id", "__str__", "status"]
+    list_display = ["id", "__str__", "status", ]
     list_editable = ["status"]
 
 class LocationAdmin(admin.ModelAdmin):
     pass
 
 class ObservationAdmin(admin.ModelAdmin):
+    list_display = ["espece__nom"]
     inlines = [ObservationPhotosInline]
     
 
