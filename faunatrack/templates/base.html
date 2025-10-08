@@ -17,11 +17,11 @@
     <header class="bg-white shadow">
         <nav class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
-                {% comment %} <a class="text-gray-800 text-xl font-bold" href="{% url 'home' %}"> </a>
+                <a class="text-gray-800 text-xl font-bold" href="{% url 'home' %}"> Home </a>
                 <div class="flex gap-4">
                     <a class="text-gray-800 hover:text-gray-600" href="{% url 'admin:index' %}">Admin</a>
                     <!-- Ajoutez d'autres liens de navigation ici -->
-                </div> {% endcomment %}
+                </div> 
             </div>
         </nav>
     </header>
@@ -29,7 +29,6 @@
     <main class="container mx-auto px-6 mt-4 min-h-screen">
         {% block content %}
         <!-- Le contenu spécifique à chaque page viendra ici -->
-        {{ title }}
         {% endblock %}
     </main>
 
