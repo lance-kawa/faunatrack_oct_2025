@@ -1,10 +1,9 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import render
-from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request: HttpRequest):
-    print(request.user.profil.profil_picture)
-
-    return HttpResponse("Bonjour")
+    return render(request, "home.html", context={
+        "title": "Faunatrack October 2025"
+    })
     
