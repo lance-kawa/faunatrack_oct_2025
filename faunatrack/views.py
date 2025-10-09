@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.shortcuts import render
@@ -6,8 +7,22 @@ from django.urls import reverse_lazy
 from faunatrack.forms import ObservationForm
 from faunatrack.models import Espece, Observation, ObservationPhotos, Scientifique
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+
+
+
+class AuthMixin(LoginRequiredMixin, UserPassesTestMixin):
+    def test_func(self):
+        try:
+            Scientifique.objects.get(user=self.request.user)
+            return True
+        except Scientifique.DoesNotExist:
+            return False
+
+
 
 # Create your views here.
+@login_required
 def home(request: HttpRequest):
     user = request.user 
     
@@ -88,13 +103,21 @@ def home(request: HttpRequest):
     
 
 
-class ObservationList(ListView):
+class ObservationList(AuthMixin, ListView):
     model = Observation
     queryset = Observation.objects.all()
-    template_name = "observations/list.html"   
+    template_name = "observations/list.html"
+    permission_required = "faunatrack.view_observation"
+    
+    def test_func(self):
+        try:
+            Scientifique.objects.get(user=self.request.user)
+            return True
+        except Scientifique.DoesNotExist:
+            return False
     
     
-class ObservationCreate(CreateView):
+class ObservationCreate(AuthMixin, CreateView):
     model = Observation
     template_name= "observations/create_update.html"
     form_class = ObservationForm
@@ -102,7 +125,7 @@ class ObservationCreate(CreateView):
     extra_context = {"action": "Ajouter"}
     
 
-class ObservationUpdate(UpdateView):
+class ObservationUpdate(AuthMixin, UpdateView):
     model = Observation
     template_name = "observations/create_update.html"
     form_class = ObservationForm
@@ -115,12 +138,12 @@ class ObservationUpdate(UpdateView):
         return super().post(request, *args, **kwargs)
     
 
-class ObservationDetail(DetailView):
+class ObservationDetail(AuthMixin, DetailView):
     model = Observation
     template_name = "observations/detail.html"
 
 
-class ObservationDelete(DeleteView):
+class ObservationDelete(AuthMixin, DeleteView):
     model = Observation
     template_name = "observations/delete.html"
     success_url = reverse_lazy("observation_list")

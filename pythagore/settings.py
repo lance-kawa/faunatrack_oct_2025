@@ -59,7 +59,7 @@ ROOT_URLCONF = 'pythagore.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ BASE_DIR / "pythagore" / "templates"], # ajouter ici les templates présent dans votre "application settings"
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,6 +114,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = 'your-email-password
 
 
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
