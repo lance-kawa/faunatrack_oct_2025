@@ -1,9 +1,10 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,  user_passes_test
+from django.contrib.auth.decorators import permission_required as permission_required_decorators
 from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import reverse_lazy
-
+from django.core.exceptions import PermissionDenied
 from faunatrack.forms import ObservationForm
 from faunatrack.models import Espece, Observation, ObservationPhotos, Scientifique
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
@@ -11,13 +12,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, 
 
 
 
-class AuthMixin(LoginRequiredMixin, UserPassesTestMixin):
-    def test_func(self):
-        try:
-            Scientifique.objects.get(user=self.request.user)
-            return True
-        except Scientifique.DoesNotExist:
-            return False
 
 
 
@@ -102,6 +96,13 @@ def home(request: HttpRequest):
     
     
 
+class AuthMixin(LoginRequiredMixin, UserPassesTestMixin):
+    def test_func(self):
+        try:
+            Scientifique.objects.get(user=self.request.user)
+            return True
+        except Scientifique.DoesNotExist:
+            return False
 
 class ObservationList(AuthMixin, ListView):
     model = Observation
@@ -115,6 +116,8 @@ class ObservationList(AuthMixin, ListView):
             return True
         except Scientifique.DoesNotExist:
             return False
+        
+
     
     
 class ObservationCreate(AuthMixin, CreateView):
