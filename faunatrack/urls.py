@@ -18,8 +18,13 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
 
 from faunatrack.views import ObservationCreate, ObservationDelete, ObservationDetail, ObservationList, ObservationUpdate, home
+from faunatrack.api_views import EspeceViewSet, ExampleView
+
+router =  DefaultRouter()
+router.register(r'especes', EspeceViewSet)
 
 urlpatterns = [
     path('obs/', ObservationList.as_view(), name="observation_list"),
@@ -27,6 +32,8 @@ urlpatterns = [
     path('obs/update/<int:pk>/', ObservationUpdate.as_view(), name="observation_update"),
     path('obs/<int:pk>/', ObservationDetail.as_view(), name="observation_detail"),
     path('obs/delete/<int:pk>/', ObservationDelete.as_view(), name="observation_delete"),
+    path('api-exemple/', ExampleView.as_view(), name="example_api"),
+    path('api/', include(router.urls))
     # path('auth/', include('django.contrib.auth.urls'))
 ]  
 
