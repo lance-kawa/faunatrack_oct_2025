@@ -5,3 +5,9 @@ MarkupSafe==3.0.3
 pillow==11.3.0
 sqlparse==0.5.3
 Werkzeug==3.1.3
+
+
+# For djangop_extensions.graph_models to work out of the box
+# python manage.py graph_models -a --app-style models.json -o styled_output.png
+pydot==4.0.1
+pyparsing==3.2.5

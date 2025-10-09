@@ -1,11 +1,14 @@
 import uuid
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.migrations.state import ProjectState
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+
+from faunatrack.validators import validate_latitude, validate_longitude
 
 
 # La quantité et la dernière localisation des especes extinct
@@ -24,7 +27,8 @@ class BaseModel(models.Model):
 
 
 class Espece(models.Model):
-
+    
+    observations: models.QuerySet["Observation"]
     
     class Meta:
         verbose_name_plural = _("Espèces")
@@ -48,11 +52,15 @@ class Espece(models.Model):
     
     
 class Location(models.Model):
-    long = models.DecimalField(max_digits=9, decimal_places=6)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    long = models.DecimalField(max_digits=9, decimal_places=6, validators=[validate_latitude])
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, validators=[validate_longitude])
     
     def __str__(self):
         return f"Long: {self.long} Lat: {self.latitude}"
+    
+    def save(self, *args, **kwargs):
+        # fetch google maps api 
+        super().save(*args, **kwargs)
 
 
 class ObservationeManager(models.Manager):
@@ -71,7 +79,7 @@ class Observation(models.Model):
     date_observation = models.DateTimeField()
     espece = models.ForeignKey(Espece, on_delete=models.PROTECT, related_name="observations")
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
-    quantite = models.IntegerField(default=0)
+    quantite = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     notes = models.TextField(null=True, blank=True)
     project = models.ForeignKey("faunatrack.Project", on_delete=models.SET_NULL, null=True, related_name="observations")
     
