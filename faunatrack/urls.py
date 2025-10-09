@@ -22,11 +22,12 @@ from django.conf.urls.static import static
 from faunatrack.views import ObservationCreate, ObservationDelete, ObservationDetail, ObservationList, ObservationUpdate, home
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', home, name="home"),
-    path('faunatrack/', include("faunatrack.urls")), # permet d'inclure des urls d'autres applications
-    path('auth/', include('django.contrib.auth.urls'))
+    path('obs/', ObservationList.as_view(), name="observation_list"),
+    path('obs/add/', ObservationCreate.as_view(), name="observation_create"),
+    path('obs/update/<int:pk>/', ObservationUpdate.as_view(), name="observation_update"),
+    path('obs/<int:pk>/', ObservationDetail.as_view(), name="observation_detail"),
+    path('obs/delete/<int:pk>/', ObservationDelete.as_view(), name="observation_delete"),
+    # path('auth/', include('django.contrib.auth.urls'))
 ]  
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

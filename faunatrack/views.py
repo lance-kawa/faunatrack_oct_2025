@@ -1,11 +1,10 @@
+from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.utils import timezone
 
 from faunatrack.forms import ObservationForm
 from faunatrack.models import Espece, Observation, ObservationPhotos, Scientifique
-from django.db.models import OuterRef, Subquery
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 # Create your views here.
@@ -47,9 +46,34 @@ def home(request: HttpRequest):
         
     obs_ids = Observation.objects.filter(espece__nom="Loup").values_list("id", flat=True)
     
-    scientifiques = Scientifique.objects.filter(projets__privacy=False, projets__observations__in=obs_ids)
+    scientifiques = Scientifique.objects.all()
     
     photos = ObservationPhotos.objects.all()[:3]
+    
+    from django.template.loader import render_to_string
+
+    # Prepare context for the email template
+    email_context = {
+        "title": "Faunatrack October 2025",
+        "last_extincts": obs_extincts,
+        "photos": photos,
+        "scientifiques": scientifiques,
+    }
+
+    # Render the HTML content using the home.html template
+    html_message = render_to_string("home.html", email_context)
+
+    # Send the email to all scientifiques' email addresses
+    recipient_list = [s.user.email for s in scientifiques if s.user.email]
+
+    # if recipient_list:
+    #     send_mail(
+    #         subject="Résumé des observations",
+    #         message="Bonjour, veuillez trouver le résumé des observations ci-dessous.",
+    #         from_email="admin@monappdjango.com",
+    #         recipient_list=recipient_list,
+    #         html_message=html_message,
+    #     )
 
 
     return render(request, "home.html", context={

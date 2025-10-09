@@ -7,8 +7,4 @@ class FaunatrackConfig(AppConfig):
     name = 'faunatrack'
     
     def ready(self):
-        print("AUTH USER MODEL -----")
-        print(settings.AUTH_USER_MODEL)
-        print("------------")
-        
-        # import faunatrack.signals
+        import faunatrack.signals
