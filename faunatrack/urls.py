@@ -21,10 +21,11 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 
 from faunatrack.views import ObservationCreate, ObservationDelete, ObservationDetail, ObservationList, ObservationUpdate, home
-from faunatrack.api_views import EspeceViewSet, ExampleView
+from faunatrack.api_views import EspeceViewSet, ExampleView, ObservationViewSet
 
 router =  DefaultRouter()
 router.register(r'especes', EspeceViewSet)
+router.register(r'observations', ObservationViewSet)
 
 urlpatterns = [
     path('obs/', ObservationList.as_view(), name="observation_list"),
