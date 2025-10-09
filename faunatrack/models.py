@@ -60,8 +60,7 @@ class ObservationeManager(models.Manager):
     def get_complex_query():
         pass
     
-    
-        
+
         
 class Observation(models.Model):
     objects = ObservationeManager()

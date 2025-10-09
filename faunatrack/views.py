@@ -40,7 +40,7 @@ def home(request: HttpRequest):
     especes = Espece.objects.filter(status=Espece.StatusChoices.EXTINCT).prefetch_related("observations")
     obs_extincts = []
     for specie in especes:
-        last_obs = specie.observations.order_by("date_observation").last()
+        last_obs: Observation = specie.observations.order_by("date_observation").last()
         obs_extincts.append(last_obs)
         
     # obs_test = Observation.objects.filter(espece__status=Espece.StatusChoices.EXTINCT)
@@ -66,12 +66,37 @@ def home(request: HttpRequest):
 
 class ObservationList(ListView):
     model = Observation
-    queryset = Observation.objects.filter(espece__nom="Loup")
+    queryset = Observation.objects.all()
     template_name = "observations/list.html"   
     
     
 class ObservationCreate(CreateView):
     model = Observation
-    template_name= "observations/create.html"
+    template_name= "observations/create_update.html"
     form_class = ObservationForm
     success_url = reverse_lazy("home")
+    extra_context = {"action": "Ajouter"}
+    
+
+class ObservationUpdate(UpdateView):
+    model = Observation
+    template_name = "observations/create_update.html"
+    form_class = ObservationForm
+    success_url = reverse_lazy("observation_list")
+    extra_context = {"action": "Modifier"}
+    
+            
+    def post(self, request, *args, **kwargs):
+        print("Bonjour")
+        return super().post(request, *args, **kwargs)
+    
+
+class ObservationDetail(DetailView):
+    model = Observation
+    template_name = "observations/detail.html"
+
+
+class ObservationDelete(DeleteView):
+    model = Observation
+    template_name = "observations/delete.html"
+    success_url = reverse_lazy("observation_list")

@@ -21,7 +21,7 @@ class LocationAdmin(admin.ModelAdmin):
     pass
 
 class ObservationAdmin(admin.ModelAdmin):
-    list_display = ["espece__nom"]
+    list_display = ["espece__nom", "id"]
     inlines = [ObservationPhotosInline]
     
 

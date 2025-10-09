@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<a href="{% url 'observation_update' object.pk %}" class="text-green-500">Modifier cette observation</a>
+<p> {{ object.espece.nom }}</p>
+<p> {{ object.date_observation }}</p>
+<a href="{% url 'observation_delete' object.pk %}"> Suppirmer ?</a>
+
+{% endblock content %}
+
