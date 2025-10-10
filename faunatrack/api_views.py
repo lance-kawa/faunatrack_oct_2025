@@ -20,8 +20,6 @@ class EspeceViewSet(viewsets.ModelViewSet):
 class ObservationViewSet(viewsets.ModelViewSet):
     queryset = Observation.objects.all()
     serializer_class = ObservationSerializer
-    
-   
 
     def get_queryset(self):
         return Observation.objects.all().order_by('id')

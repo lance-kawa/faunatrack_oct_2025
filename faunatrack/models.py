@@ -34,6 +34,9 @@ class Espece(models.Model):
         verbose_name_plural = _("Espèces")
         verbose_name= _("Espece")
         ordering = ["nom"]
+        indexes = [
+            models.Index(fields=["nom"], name="idx_nom"),
+        ]
         # db_table = "faunatrack_espece"
     
     class StatusChoices(models.TextChoices):
@@ -43,7 +46,6 @@ class Espece(models.Model):
         EXTINCT = ("extinct", _("Y'en a plus"))
         DEFAULT = ("default", _("default"))
    
-        
     nom = models.CharField(max_length=255, default="espece inconnu", unique=True)
     status = models.CharField(max_length=255, default=StatusChoices.DEFAULT, choices=StatusChoices.choices)
     

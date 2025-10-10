@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block content %}
 
@@ -10,7 +9,7 @@
     {% endfor %}
 
     {% for photo in photos %}
-        <img src="{{ photo.photo.url ]}" alt="photos">
+        <img src="{{ photo.photo.url }}" alt="photos">
 
     {% endfor %}
 

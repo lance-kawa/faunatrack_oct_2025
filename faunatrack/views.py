@@ -9,8 +9,7 @@ from faunatrack.forms import ObservationForm
 from faunatrack.models import Espece, Observation, ObservationPhotos, Scientifique
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-
-
+from django_celery_beat.models import PeriodicTask
 
 
 
@@ -83,6 +82,13 @@ def home(request: HttpRequest):
     #         recipient_list=recipient_list,
     #         html_message=html_message,
     #     )
+
+    # from faunatrack.tasks.add import add
+        
+    # add.apply_async(kwargs={"x": 1, "y": 2})
+    
+    
+    PeriodicTask.objects.filter(name="add").delete()
 
 
     return render(request, "home.html", context={

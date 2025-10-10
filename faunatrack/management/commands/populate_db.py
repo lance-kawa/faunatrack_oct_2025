@@ -24,5 +24,8 @@ class Command(BaseCommand):
             name = "Ours brun"
             Espece.objects.create(nom=name)
         logger.info(name)
+        from faunatrack.tasks.add import add
+        
+        add.apply_async()
 
  
