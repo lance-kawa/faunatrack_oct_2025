@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-
+from django.utils.timezone import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'import_export',
     'rest_framework',
+    'rest_framework_simplejwt',
     'faunatrack',
 ]
 
@@ -130,11 +131,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
+# STATIC_URL = 'static/'
+# MEDIA_URL = 'media/'
 
-STATIC_ROOT = "staticfiles/"
-MEDIA_ROOT = "pythagore/media"
+# STATIC_ROOT = "staticfiles/"
+# MEDIA_ROOT = "pythagore/media"
+
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'  
 
 
 # Default primary key field type
@@ -158,7 +165,14 @@ REST_FRAMEWORK = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ]
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
 }

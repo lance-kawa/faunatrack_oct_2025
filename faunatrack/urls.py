@@ -23,6 +23,8 @@ from rest_framework.routers import DefaultRouter
 from faunatrack.views import ObservationCreate, ObservationDelete, ObservationDetail, ObservationList, ObservationUpdate, home
 from faunatrack.api_views import EspeceViewSet, ExampleView, ObservationViewSet
 
+
+# For documentations, follow instruction to install swagger https://www.django-rest-framework.org/topics/documenting-your-api/
 router =  DefaultRouter()
 router.register(r'especes', EspeceViewSet)
 router.register(r'observations', ObservationViewSet)

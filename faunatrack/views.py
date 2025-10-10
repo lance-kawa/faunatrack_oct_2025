@@ -117,8 +117,6 @@ class ObservationList(AuthMixin, ListView):
         except Scientifique.DoesNotExist:
             return False
         
-
-    
     
 class ObservationCreate(AuthMixin, CreateView):
     model = Observation
